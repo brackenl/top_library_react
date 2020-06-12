@@ -22,6 +22,11 @@ const NewBookForm = (props) => {
                   onChange={props.handleInput}
                   required
                 />
+                {!item.valid && item.touched ? (
+                  <span className="error" aria-live="polite">
+                    {item.errorMessage}
+                  </span>
+                ) : null}
               </div>
             );
           })}

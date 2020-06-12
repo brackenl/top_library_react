@@ -8,6 +8,7 @@ import Button from "./components/Button/Button";
 import NewBookForm from "./components/NewBookForm/NewBookForm";
 import initialBooks from "./shared/initialBooks";
 import formDetails from "./shared/formDetails";
+import { checkValidity } from "./util/validateForm";
 
 const App = () => {
   const [showForm, setShowForm] = useState(false);
@@ -23,16 +24,35 @@ const App = () => {
     const relIndex = newForm.findIndex(
       (item) => item.label === event.target.id
     );
+    newForm[relIndex].touched = true;
     if (event.target.type !== "checkbox") {
       newForm[relIndex].value = event.target.value;
     } else {
       newForm[relIndex].checked = event.target.checked;
     }
+    checkValidity(
+      newForm[relIndex].value,
+      newForm[relIndex].validity,
+      newForm[relIndex]
+    )
+      ? (newForm[relIndex].valid = true)
+      : (newForm[relIndex].valid = false);
     setForm(newForm);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
+    const currForm = [...form];
+    if (currForm.filter((item) => item.valid === false).length > 0) {
+      for (let item of currForm) {
+        item.touched = true;
+      }
+      setForm(currForm);
+      alert(
+        "Please ensure that you have filled in the book's details correctly!"
+      );
+      return;
+    }
     const newBook = {
       title: form[0].value,
       author: form[1].value,
@@ -57,6 +77,8 @@ const App = () => {
     for (let item of initialForm) {
       item.value = "";
       item.checked = false;
+      item.valid = false;
+      item.touched = false;
     }
     setForm(initialForm);
   };
