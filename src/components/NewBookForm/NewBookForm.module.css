@@ -1,0 +1,39 @@
+.FormContainer {
+  display: block;
+  background-color: #742600;
+  border: solid 10px #4e1900;
+  margin: 0 auto;
+  padding: 15px 0;
+  width: 1010px;
+}
+
+.FormHeading {
+  font-size: 16pt;
+  font-weight: bold;
+  padding: 0 0 5px 0;
+  text-align: center;
+}
+
+.FormFields {
+  background-color: #004e74;
+  border: solid 5px #00354e;
+  border-radius: 5px;
+  margin: 0 auto;
+  padding: 20px 10px;
+  text-align: center;
+  width: 70%;
+}
+
+.FormFields input {
+  margin-left: 10px;
+}
+
+.FormGroup {
+  padding: 5px 0;
+}
+
+.Button {
+  width: 20%;
+  height: 10%;
+  margin: 10px 10px;
+}

@@ -1,0 +1,31 @@
+.Book {
+  background-color: #004e74;
+  border: solid 3px #00354e;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 10px 5px;
+  width: 300px;
+}
+
+.Book h3 {
+  font-weight: bold;
+  padding-bottom: 2px;
+  text-align: center;
+}
+
+.Book p {
+  padding-bottom: 2px;
+  text-align: center;
+}
+
+.ReadButton {
+  padding-top: 3px;
+  text-align: center;
+}
+
+.DeleteButton {
+  background-color: red;
+  color: white;
+  float: bottom;
+  float: right;
+}

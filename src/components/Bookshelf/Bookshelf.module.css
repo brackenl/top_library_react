@@ -1,0 +1,9 @@
+.Bookshelf {
+  background-color: #742600;
+  border: solid 10px #4e1900;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 1010px;
+  margin: 0 auto;
+}
