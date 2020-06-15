@@ -9,7 +9,7 @@ const book = (props) => {
       <p>Author: {props.author}</p>
       <p>Pages: {props.pages}</p>
       <div className={classes.ReadButton}>
-        <button id={props.id} onClick={(e) => props.clicked(props.id)}>
+        <button onClick={(e) => props.clicked(props.id)}>
           {props.read ? "Read" : "Not read"}
         </button>
       </div>
