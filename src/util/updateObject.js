@@ -1,7 +1,7 @@
-const updateObject = (obj, updatedObj) => {
+const updateObject = (oldObject, updatedValues) => {
   return {
-    ...obj,
-    ...updatedObj,
+    ...oldObject,
+    ...updatedValues,
   };
 };
 
