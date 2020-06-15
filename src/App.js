@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import axios from "axios";
 
 import "./App.css";
@@ -7,34 +8,19 @@ import Title from "./components/Title/Title";
 import Bookshelf from "./components/Bookshelf/Bookshelf";
 import Button from "./components/Button/Button";
 import NewBookForm from "./components/NewBookForm/NewBookForm";
-// import initialBooks from "./shared/initialBooks";
 import formDetails from "./shared/formDetails";
 import { checkValidity } from "./util/validateForm";
+import * as actions from "./store/actions/actions";
 
-const App = () => {
+const App = (props) => {
   const [showForm, setShowForm] = useState(false);
-  const [books, setBooks] = useState(null);
   const [form, setForm] = useState([...formDetails]);
-  const [loading, setLoading] = useState(true);
 
-  const getBooks = useCallback(() => {
-    setLoading(true);
-    axios
-      .get("https://top-library-react.firebaseio.com/initialBooks.json")
-      .then((response) => {
-        const booksArr = [];
-        for (let key in response.data) {
-          booksArr.push({ ...response.data[key], key: key, id: key });
-        }
-        setBooks(booksArr);
-        setLoading(false);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const initialise = props.onInitialiseBookshelf;
 
   useEffect(() => {
-    getBooks();
-  }, [getBooks]);
+    props.onInitialiseBookshelf();
+  }, [initialise]);
 
   const toggleFormHandler = () => {
     setShowForm(!showForm);
@@ -79,7 +65,7 @@ const App = () => {
       author: form[1].value,
       pages: form[2].value,
       read: form[3].checked,
-      id: books.length + 1,
+      id: props.books.length + 1,
     };
 
     axios
@@ -88,7 +74,7 @@ const App = () => {
         newBook
       )
       .then((response) => {
-        getBooks();
+        props.onInitialiseBookshelf();
         resetForm();
         toggleFormHandler();
       })
@@ -113,21 +99,14 @@ const App = () => {
   };
 
   const toggleRead = (key) => {
-    const relIndex = books.findIndex((book) => book.key === key);
+    const relIndex = props.books.findIndex((book) => book.key === key);
     axios
       .patch(
         `https://top-library-react.firebaseio.com/initialBooks/${key}.json`,
-        { read: !books[relIndex].read }
+        { read: !props.books[relIndex].read }
       )
-      .then((response) => getBooks())
+      .then((response) => props.onInitialiseBookshelf())
       .catch((err) => console.log(err));
-
-    /*
-    const currBooks = [...books];
-    const relIndex = currBooks.findIndex((item) => item.id === id);
-    currBooks[relIndex].read = !currBooks[relIndex].read;
-    setBooks(currBooks);
-    */
   };
 
   const deleteBookHandler = (key) => {
@@ -135,25 +114,18 @@ const App = () => {
       .delete(
         `https://top-library-react.firebaseio.com/initialBooks/${key}.json`
       )
-      .then((response) => getBooks())
+      .then((response) => props.onInitialiseBookshelf())
       .catch((err) => console.log(err));
-
-    /*
-    const currBooks = [...books];
-    const relIndex = currBooks.findIndex((item) => item.id === id);
-    currBooks.splice(relIndex, 1);
-    setBooks(currBooks);
-    */
   };
 
   return (
     <div className="App">
       <Title title="The Library" />
       <Bookshelf
-        bookList={books}
+        bookList={props.books}
         toggleRead={toggleRead}
         deleteBook={deleteBookHandler}
-        loading={loading}
+        loading={props.loading}
       />
       <Button
         clicked={toggleFormHandler}
@@ -172,4 +144,19 @@ const App = () => {
   );
 };
 
-export default App;
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    books: state.books,
+    loading: state.loading,
+    error: state.error,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onInitialiseBookshelf: () => dispatch(actions.initialiseBookshelf()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
